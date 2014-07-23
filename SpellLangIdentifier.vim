@@ -9,7 +9,7 @@
 "
 "       Author: Douglas A. Augusto (daaugusto@gmail.com)
 "
-"      Version: 0.1.1
+"      Version: 0.2.0
 "
 "      License: GNU GPL version 3 or later <www.gnu.org/licenses/gpl.html>
 "
