@@ -79,7 +79,17 @@ Usage
    3. Directly: `:{range}SpellLangIdentify` (identify the language based on `{range}` lines; default is the whole buffer)
 
 
+Notes
+-----
+
+The user can create its own reference language set ("maps") which will
+guide/bias the language identification. An example would be to create an n-gram
+frequency file (a map) for words related to the medical literature or, perhaps,
+to some subset of the English language. Please check out mguesser's
+documentation for that.
+
+
 Prerequisites
 -------------
 
-   * Unix-like environment (POSIX shell, coreutils, awk, cat, sed, grep, printf, paste, tr, file, which, basename, dirname, mktemp, rm, rmdir, ...).
+   * Unix-like environment (POSIX shell, coreutils, awk, sed, grep, file, ...).

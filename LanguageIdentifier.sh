@@ -32,15 +32,15 @@ usage()
    echo "  -path <mguesser path>"
    echo "     mguesser executable path (see http://www.mnogosearch.org/guesser/)"
    echo "  -maps <lang maps dir>"
-   echo "     mguesser language maps directory (default: 'mguesser dir/maps')"
+   echo "     mguesser language maps directory (default: 'mguesser_dir/maps')"
    echo "  -langs <lang1|...|langN>"
    echo "     narrows down the subset of guessed languages"
    echo "  -nlangs <n>"
-   echo "     allows up to 'n' languages to be identified"
+   echo "     allows up to 'n' languages to be identified (multiple spell langs)"
    echo "  -subs <sed's patterns>"
-   echo "     translates detected languages to others"
+   echo "     translates mguesser language codes to others"
    echo "  -raw"
-   echo "     does not try to convert input to plain text"
+   echo "     does not try to convert input to plain text (letters only)"
    echo "  filename"
    echo "     filename (w/ extension) to help to determine the input file type"
    echo
@@ -75,7 +75,7 @@ NLANGS=1
 
 # Translates mguesser languages to Vim spell files (sed syntax)
 #
-# Current mguesser's language list:
+# Current mguesser's language list (the user can build others; see mguesser docs):
 #    af ar az be bg br bs ca cs cy da de el en eo eo-h eo-x es et eu fi fr ga
 #    he hi hr hu hy is it ja la lt lv nl no pl pt-br pt-pt ro ru sk sl sq sr sv
 #    sw ta th tl tr ua vi zh
@@ -131,14 +131,14 @@ case $FT in
       if type html2text > /dev/null 2>&1; then FILTER="$FILTER | html2text"; fi ;;
 esac
 
-# Guess the language (unfortunately tr from coreutils still seems to not fully support utf-8):
+# Guess the language:
 #  1) the filter that converts the raw input to plain text is applied (if -raw isn't specified)
 #  2) all punctuation chars are transformed into single spaces, which are then squeezed and
 #     all characters that are not letters or spaces are deleted.
 #  3) the resulting content are then given to 'mguesser'
 CMD="$FILTER 2>/dev/null | tr -d '[:digit:][:cntrl:]' | tr '[:punct:][:space:]' ' ' | tr -s ' ' | "$MG" -d "$MGMAPS" - 2>/dev/null"
 
-# Evaluate the assembled command and check if it succeeded
+# Evaluate the assembled command and check if it has succeeded
 OUT="`eval "$CMD" 2>/dev/null`"
 
 if [ "$?" = "0" ]
