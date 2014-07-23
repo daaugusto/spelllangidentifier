@@ -44,14 +44,14 @@ usage()
    echo "  filename"
    echo "     filename (w/ extension) to help to determine the input file type"
    echo
-   echo "Example: cat text.tex | $SCRIPT_NAME -path ~/bin/mguesser -langs 'en|ca|pt'"
+   echo "Example: cat text.tex | $SCRIPT_NAME -path ~/bin/mguesser -langs 'en_US|ca|pt'"
    echo "             -nlangs 3 -subs 's/^en$/en_US/;s/^pt-br$|^pt-pt$/pt/;' text.tex"
    echo
    echo "This is free software. You may redistribute copies of it under the terms"
    echo "of the GNU General Public License <http://www.gnu.org/licenses/gpl.html>."
    echo "There is NO WARRANTY, to the extent permitted by law."
    echo ""
-   echo "Written by Douglas Adriano Augusto (daaugusto)."
+   echo "Written by Douglas A. Augusto (daaugusto)."
 
    exit 0
 }
@@ -65,15 +65,21 @@ MG="$(which mguesser 2> /dev/null)"
 # Path of the language maps
 MGMAPS=""
 
-# Restrict the guessing to a number of languages. Uses .* for all of them
-LANGS=".*"
+# Restrict the guessing to a number of languages (it operates on the processed
+# list of languages, i.e., after the substitutions are applied (see below)).
+LANGS=".*"   # .* allows all of them
 
 # Maximum number of guessed languages (comma separated, for instance, if
 # NLANGS=2 this would be possible: ':set spelllang=en,pt')
 NLANGS=1
 
 # Translates mguesser languages to Vim spell files (sed syntax)
-SUBS=""
+#
+# Current mguesser's language list:
+#    af ar az be bg br bs ca cs cy da de el en eo eo-h eo-x es et eu fi fr ga
+#    he hi hr hu hy is it ja la lt lv nl no pl pt-br pt-pt ro ru sk sl sq sr sv
+#    sw ta th tl tr ua vi zh
+SUBS=":"   # sed ':' does nothing (same as cat)
 
 # Whether to pass the contents to mguesses as is
 RAW=""
@@ -97,18 +103,19 @@ done
 
 # Try to guess the mguesser's maps directory
 [ -z "$MGMAPS" ] && MGMAPS="$(dirname "$MG")/maps"
-[ -z "$FILE" ] && FILE="unnamed"
 
-FT=""
 
 TMP="`mktemp -d`"
+[ -z "$FILE" ] && FILE="unnamed"
 FILE="$TMP/$FILE"
 
-FILTER="cat "$FILE""
+FILTER="cat "$FILE""   # does nothing
 
+# Save the input to the temporary file
 cat - > "$FILE"
 
 # Find out the type of the file if the option '-raw' has not been specified
+FT=""
 [ "$RAW" ] || FT="`file -b -i "$FILE" | awk '{print $1}' | tr -d ';'`"
 
 # Transform (try to) non-plain text files to plain text:
@@ -124,21 +131,34 @@ case $FT in
       if type html2text > /dev/null 2>&1; then FILTER="$FILTER | html2text"; fi ;;
 esac
 
-# Guess the language (unfortunately tr (from coreutils) still seems to not fully support utf-8)
-CMD="$FILTER 2>/dev/null | tr '[:punct:]' ' ' | tr -s '[:space:]' | tr -d -c '[:alpha:][:space:][àáâãäåèéêëìíîïòóôõöùúûüçñÀÁÂÃÄÅÈÉÊËÌÍÎÏÒÓÔÕÖÙÚÛÜÇÑ]' | "$MG" -d "$MGMAPS" - 2>/dev/null | awk '\$1 !~ /^0.00/ {print \$2}' | grep -E -w -m $NLANGS \"$LANGS\""
+# Guess the language (unfortunately tr from coreutils still seems to not fully support utf-8):
+#  1) the filter that converts the raw input to plain text is applied (if -raw isn't specified)
+#  2) all punctuation chars are transformed into single spaces, which are then squeezed and
+#     all characters that are not letters or spaces are deleted.
+#  3) the resulting content are then given to 'mguesser'
+CMD="$FILTER 2>/dev/null | tr '[:punct:]' ' ' | tr -s '[:space:]' | tr -d -c '[:alpha:][:space:][àáâãäåèéêëìíîïòóôõöùúûüçñÀÁÂÃÄÅÈÉÊËÌÍÎÏÒÓÔÕÖÙÚÛÜÇÑ]' | "$MG" -d "$MGMAPS" - 2>/dev/null"
 
-# Perform the substitutions if any
-[ "$SUBS" ] && CMD="$CMD | sed -E '$SUBS'"
+# Evaluate the assembled command and check if it succeeded
+OUT="`eval "$CMD" 2>/dev/null`"
 
-# Debugging
-#echo "$CMD [-path $MG | -maps $MGMAPS | -langs $LANGS | -nlangs $NLANGS | -subs $SUBS | -raw $RAW]"
+if [ "$?" = "0" ]
+then
+   # Print the command output (scores and languages) | ignore zero-score
+   # guessings | perform the substitutions (if any)| remove possible duplicate
+   # languages | filter out undesired languages (matches whole line) | replace
+   # EOL with comma
+   LANG="$(printf "%s\n" "$OUT" | awk '$1 !~ /^0.000/ {print $2}' | sed -E "$SUBS" | awk '!a[$0]++' | grep -E -x -m $NLANGS "$LANGS" | paste -sd',')"
 
-# Evaluate the command; remove possible duplicate languages; replace EOL with a comma
-LANG=$(eval "$CMD" | awk '!a[$0]++' | paste -sd',')
+   # Output guessed language (empty if it could not identify)
+   echo "$LANG"
+else
+   echo "ERROR"
 
-# Output guessed language
-echo "$LANG"
+   # Debugging (uncomment for debugging)
+   #echo "$CMD [-path $MG | -maps $MGMAPS | -langs $LANGS | -nlangs $NLANGS | -subs $SUBS | -raw $RAW]"
+   #printf "%s\n" "$OUT"
+fi
 
 # Remove temporary files
-rm -f "$FILE"
+rm -f -- "$FILE"
 rmdir "$TMP"
