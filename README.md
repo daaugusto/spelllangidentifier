@@ -62,3 +62,15 @@ Usage
    1. Automatically (just open a text or TeX file as defined above)
    2. Using shortcuts in normal or insert mode (F6, F7, F8)
    3. Directly: `:{range}SpellLangIdentify` (identify the language based on `{range}` lines; default is the whole buffer)
+
+
+Prerequisites
+-------------
+
+   * Unix-like environment (POSIX shell, coreutils, awk, cat, sed, grep, printf, paste, tr, file, which, basename, dirname, mktemp, rm, rmdir, ...).
+
+
+Known limitations
+-----------------
+
+   * Currently support for unicode is limited due to *coreutils* not being fully compatible with UTF-8 yet.

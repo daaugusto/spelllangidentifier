@@ -9,59 +9,15 @@
 "
 "       Author: Douglas A. Augusto (daaugusto@gmail.com)
 "
-"      Version: 0.1.0
-"
-"  Last change: July 20, 2014
+"      Version: 0.1.1
 "
 "      License: GNU GPL version 3 or later <www.gnu.org/licenses/gpl.html>
 "
 "          URL: http://www.vim.org/scripts/script.php?script_id=4988
 "
-" Installation: Copy the plug-in (SpellLangIdentifier.vim) and the accompanying
-"               script (LanguageIdentifier.sh) files into Vim's plug-in directory
-"               (usually $HOME/.vim/plugin/ or something like that)
+"  Installation
+"      & Usage: Please see README file
 "
-"               mguesser needs to be installed (http://www.mnogosearch.org/guesser/)
-"               and reachable through $PATH (or its path configured by variables
-"               g:sliPath (mguesser's executable) and g:sliMaps (language maps)
-"
-"               It is recommended to put mguesser executable inside the directory
-"               $HOME/.vim/plugin/mguesser/ and the mappings into
-"               $HOME/.vim/plugin/mguesser/maps/
-"
-"        Usage:
-"
-"           1) Calling the language identifier command directly:
-"              :{range}SpellLangIdentify   " identify the language based on
-"                                          " {range} lines (default is the whole buffer)
-"
-"           2) Via auto commands and mappings (.vimrc):
-"
-"              " Detects document's language and sets spell checking when
-"                reading a .tex file
-"              autocmd BufRead *.tex SpellLangIdentify setlocal spell
-"
-"              " Identifies current paragraph's language and sets the spell
-"                checking whenever leaving insert mode
-"              autocmd InsertLeave *.tex '{,'}SpellLangIdentify setlocal spell
-"
-"              Recommended mappings:
-"                 " normal mode
-"                 map <F6> :.SpellLangIdentify setlocal spell<CR>:set spl<CR>
-"                 map <F7> :'{,'}SpellLangIdentify setlocal spell<CR>:set spl<CR>
-"                 map <F8> :%SpellLangIdentify setlocal spell<CR>:set spl<CR>
-"                 " insert mode
-"                 imap <F6> <C-\><C-O>:.SpellLangIdentify setlocal spell<CR><C-\><C-O>:set spl<CR>
-"                 imap <F7> <C-\><C-O>:'{,'}SpellLangIdentify setlocal spell<CR><C-\><C-O>:set spl<CR>
-"                 imap <F8> <C-\><C-O>:%SpellLangIdentify setlocal spell<CR><C-\><C-O>:set spl<CR>
-"
-"              Settings example:
-"                 let g:sliPath = "-path ~/.vim/plugin/mguesser/mguesser"
-"                 "let g:sliMaps = "-maps ..."
-"                 let g:sliLangs = "-langs 'en|pt'"
-"                 let g:sliNLangs = "-nlangs 1"
-"                 let g:sliSubs = "-subs 's/^pt-br$|^pt-pt$/pt/;'"
-"                 "leg g:sliRaw = "-raw"
 
 " ==============================================================================
 " Has this plugin already been loaded?
