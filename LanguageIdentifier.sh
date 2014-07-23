@@ -116,7 +116,7 @@ cat - > "$FILE"
 
 # Find out the type of the file if the option '-raw' has not been specified
 FT=""
-[ "$RAW" ] || FT="`file -b -i "$FILE" | awk '{print $1}' | tr -d ';'`"
+[ "$RAW" ] || FT="`file --mime-type -b "$FILE"`"
 
 # Transform (try to) non-plain text files to plain text:
 case $FT in
@@ -136,7 +136,7 @@ esac
 #  2) all punctuation chars are transformed into single spaces, which are then squeezed and
 #     all characters that are not letters or spaces are deleted.
 #  3) the resulting content are then given to 'mguesser'
-CMD="$FILTER 2>/dev/null | tr '[:punct:]' ' ' | tr -s '[:space:]' | tr -d -c '[:alpha:][:space:][àáâãäåèéêëìíîïòóôõöùúûüçñÀÁÂÃÄÅÈÉÊËÌÍÎÏÒÓÔÕÖÙÚÛÜÇÑ]' | "$MG" -d "$MGMAPS" - 2>/dev/null"
+CMD="$FILTER 2>/dev/null | tr -d '[:digit:][:cntrl:]' | tr '[:punct:][:space:]' ' ' | tr -s ' ' | "$MG" -d "$MGMAPS" - 2>/dev/null"
 
 # Evaluate the assembled command and check if it succeeded
 OUT="`eval "$CMD" 2>/dev/null`"

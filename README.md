@@ -68,9 +68,3 @@ Prerequisites
 -------------
 
    * Unix-like environment (POSIX shell, coreutils, awk, cat, sed, grep, printf, paste, tr, file, which, basename, dirname, mktemp, rm, rmdir, ...).
-
-
-Known limitations
------------------
-
-   * Currently support for unicode is limited due to *coreutils* not being fully compatible with UTF-8 yet.
