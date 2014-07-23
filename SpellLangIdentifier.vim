@@ -59,7 +59,7 @@
 "                 let g:sliPath = "-path ~/.vim/plugin/mguesser/mguesser"
 "                 "let g:sliMaps = "-maps ..."
 "                 let g:sliLangs = "-langs 'en|pt'"
-"                 let g:sliNLangs = "1"
+"                 let g:sliNLangs = "-nlangs 1"
 "                 let g:sliSubs = "-subs 's/^pt-br$|^pt-pt$/pt/;'"
 "                 "leg g:sliRaw = "-raw"
 
@@ -108,17 +108,16 @@ function! <SID>SpellLangIdentify( cmd ) range
    " Run the command and execute its output
    let lang = system(s:sliScriptPath . " " . g:sliPath . " " . g:sliMaps . " " . g:sliLangs . " " . g:sliNLangs . " " . g:sliSubs . " " . g:sliRaw . " " . shellescape(expand('%:t')), input)
 
-   if len(lang) > 1
-      silent execute ":setlocal spelllang=" . lang
-      execute a:cmd
-      "set spelllang
-   else
-      " If input length is 0 (counting only useful data) then the identification
-      " has failed because there is not enough information. But when the length
-      " is greater then zero probably an error has occurred.
-      let input = substitute(input,'[^[:alpha:]]','','g')
-      if strlen(input) > 0
-         echo "[SpellLangIdentifier] Unable to automatically identify text's language."
+   if !empty(lang) " If input length is 0 then the identification has failed because there is not enough information (soft error).
+      if lang != "ERROR"
+         " Set the spell language(s) based on the guessing
+         silent execute ":setlocal spelllang=" . lang . "\n"
+         " Execute the user given arguments now the language is identified
+         execute a:cmd
+
+         "set spelllang
+      else " hard error
+         echoe "[SpellLangIdentifier] An error has occurred while running 'mguesser'!"
       endif
    endif
 endfunction

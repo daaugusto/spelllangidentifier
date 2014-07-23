@@ -150,9 +150,9 @@ then
    LANG="$(printf "%s\n" "$OUT" | awk '$1 !~ /^0.000/ {print $2}' | sed -E "$SUBS" | awk '!a[$0]++' | grep -E -x -m $NLANGS "$LANGS" | paste -sd',')"
 
    # Output guessed language (empty if it could not identify)
-   echo "$LANG"
+   printf "%s" "$LANG"
 else
-   echo "ERROR"
+   printf "ERROR"
 
    # Debugging (uncomment for debugging)
    #echo "$CMD [-path $MG | -maps $MGMAPS | -langs $LANGS | -nlangs $NLANGS | -subs $SUBS | -raw $RAW]"

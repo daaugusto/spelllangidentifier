@@ -39,7 +39,7 @@ Configuration (~/.vimrc)
    let g:sliPath = "-path ~/.vim/plugin/mguesser/mguesser"
    "let g:sliMaps = "-maps ..."
    let g:sliLangs = "-langs 'en|pt'"
-   let g:sliNLangs = "1"
+   let g:sliNLangs = "-nlangs 1"
    let g:sliSubs = "-subs 's/^pt-br$|^pt-pt$/pt/;'"
    "leg g:sliRaw = "-raw"
 
