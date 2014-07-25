@@ -68,10 +68,10 @@ command! -range=% -nargs=* SpellLangIdentifyLazy if <SID>HasChanged() | let pos 
 " It does not account for individual changes, but rather change sets (like undo)
 " A more active approach would be to use b:changedtick instead of changenr()
 function! <SID>HasChanged()
-   if s:LastChangeID != changenr()
-      let s:LastChangeID = changenr()
-   "if s:LastChangeID != b:changedtick
-   "   let s:LastChangeID = b:changedtick
+   if s:sliLastChangeID != changenr()
+      let s:sliLastChangeID = changenr()
+   "if s:sliLastChangeID != b:changedtick
+   "   let s:sliLastChangeID = b:changedtick
       return 1
    else
       return 0
