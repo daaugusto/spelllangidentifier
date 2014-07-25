@@ -9,7 +9,7 @@
 "
 "       Author: Douglas A. Augusto (daaugusto@gmail.com)
 "
-"      Version: 0.2.0
+"      Version: 0.3.0
 "
 "      License: GNU GPL version 3 or later <www.gnu.org/licenses/gpl.html>
 "
@@ -52,26 +52,26 @@ if !exists('g:sliRaw')
    let g:sliRaw = ""
 endif
 
-" changenr() starts with 0. So, assigning 0 here means that when a buffer
-" is read (opened) HasChanged() -> false; assigning a value different
-" than zero (like -1) means that HasChanged() -> true when the buffer
-" is opened.
-let s:sliLastChangeID = 0
+" ID/count of the last buffer change
+" b:changedtick seems to start with 3 when creating/reading a named file So,
+" assigning 3 here means that when a buffer is read (opened) HasChanged() ->
+" false; assigning a value different than 3 (like 0) means that HasChanged() ->
+" true when the buffer is opened.
+let s:sliLastChangeID = 3
 
 " Save the cursor position, run the external script and restore the cursor position
-command! -range=% -nargs=* SpellLangIdentify let pos = getpos('.') | <line1>,<line2>call <SID>SpellLangIdentify(<q-args>) | call setpos('.',pos)
+command! -range=% -nargs=* -bar SpellLangIdentify let pos = getpos('.') | <line1>,<line2>call <SID>SpellLangIdentify(<q-args>) | call setpos('.',pos)
 
 " Only perform the language identification if the buffer has changed
-command! -range=% -nargs=* SpellLangIdentifyLazy if <SID>HasChanged() | let pos = getpos('.') | <line1>,<line2>call <SID>SpellLangIdentify(<q-args>) | call setpos('.',pos)
+command! -range=% -nargs=* -bar SpellLangIdentifyLazy if <SID>HasChanged() | let pos = getpos('.') | <line1>,<line2>call <SID>SpellLangIdentify(<q-args>) | call setpos('.',pos)
 
 " Check whether the buffer has been changed since the last time
-" It does not account for individual changes, but rather change sets (like undo)
-" A more active approach would be to use b:changedtick instead of changenr()
+" A lazier approach would be to use changenr() instead of b:changedtick,
+" which does not account for individual changes, but rather change sets (like undo)
 function! <SID>HasChanged()
-   if s:sliLastChangeID != changenr()
-      let s:sliLastChangeID = changenr()
-   "if s:sliLastChangeID != b:changedtick
-   "   let s:sliLastChangeID = b:changedtick
+   if s:sliLastChangeID != b:changedtick
+      let s:sliLastChangeID = b:changedtick
+      "echo "Buffer has changed " . b:changedtick . "/" . changenr() . " times so far."
       return 1
    else
       return 0
