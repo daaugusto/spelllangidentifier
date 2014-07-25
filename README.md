@@ -19,15 +19,17 @@ Installation
 Configuration (~/.vimrc)
 ------------------------
 
-Please, check out the sample Vim configuration file `vimrc.sli`.
+Please, check out the sample Vim configuration file `vimrc.sli`. You can
+introduce your changes there and *source* it directly from your personal
+*vimrc* by inserting the line `source /path/to/vimrc.sli`.
 
 
 Usage
 -----
 
-   1. Automatically (just open a text, mail or TeX file as defined above)
-   2. Using shortcuts in normal or insert mode (F6, F7, and F8; F9 to disable spell checking)
-   3. Directly: `:{range}SpellLangIdentify` (identify the language based on `{range}` lines; default is the whole buffer)
+   1. Automatically (just open a text, mail or TeX file, as illustrated in `vimrc.sli`). It even works on-the-fly while you edit the file, switching the languages on a paragraph basis when working on multi-language documents (configurable).
+   2. Using shortcuts in normal or insert mode (`F6`, `F7`, and `F8`; `F9` to disable spell checking).
+   3. Directly: `:{range}SpellLangIdentify` (identify the language based on `{range}` lines; default is the whole buffer).
 
 
 Notes
