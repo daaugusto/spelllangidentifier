@@ -1,0 +1,73 @@
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" Recommended mappings:
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" normal mode
+map <F6> :.SpellLangIdentify setlocal spell<CR>:set spl<CR> " current line based
+map <F7> :'{,'}SpellLangIdentify setlocal spell<CR>:set spl<CR> " current paragraph based
+map <F8> :%SpellLangIdentify setlocal spell<CR>:set spl<CR> " whole buffer based
+map <F9> :setlocal nospell<CR> " turn off spell checking
+
+" insert mode
+imap <F6> <C-\><C-O>:.SpellLangIdentify setlocal spell<CR><C-\><C-O>:set spl<CR>
+imap <F7> <C-\><C-O>:'{,'}SpellLangIdentify setlocal spell<CR><C-\><C-O>:set spl<CR>
+imap <F8> <C-\><C-O>:%SpellLangIdentify setlocal spell<CR><C-\><C-O>:set spl<CR>
+imap <F9> <C-\><C-O>:setlocal nospell<CR>
+
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" Settings example:
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" Executable's path
+let g:sliPath = "-path ~/.vim/plugin/mguesser/mguesser"
+
+" Set this path if the language maps are installed elsewhere
+"let g:sliMaps = "-maps ..."
+
+" Converts mguesser's pt-br or pt-pt to pt. For multiple substitutions, put
+" a ';' and the replace command like: "-subs 's/pt-br|pt-pt/pt/;s/ca/en/'"
+let g:sliSubs = "-subs 's/pt-br|pt-pt/pt/'"
+
+" After conversion, ignores all lang but en (includes ca) and pt (pt-br and pt-pt)
+let g:sliLangs = "-langs 'en|pt'"
+
+" Only one language will be guessed at a time
+let g:sliNLangs = "-nlangs 1"
+
+" If enabled it does not try to convert to plain text
+"leg g:sliRaw = "-raw"
+
+" Default mguesser's language code list (the user can create their own mapping):
+"    af ar az be bg br bs ca cs cy da de el en eo eo-h eo-x es et eu fi fr ga
+"    he hi hr hu hy is it ja la lt lv nl no pl pt-br pt-pt ro ru sk sl sq sr sv
+"    sw ta th tl tr ua vi zh
+
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" Autocmd examples (language identification & spelling based on file types):
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" Detects document's language and sets spell checking when reading a .txt file:
+autocmd BufRead *.txt SpellLangIdentify setlocal spell
+
+" Identifies current paragraph's language and sets the spell checking whenever
+" leaving insert mode:
+autocmd InsertLeave *.txt '{,'}SpellLangIdentify setlocal spell
+
+" Another way of configuring SpellLangIdentifier based on the file type:
+" As illustrated by the example below, when the filetype is 'mail' or 'tex'
+" (and its variants) two things happen:
+"   1) Identification of the buffer's language, turning on spell checking; and
+"   2) Telling to (re)identify the language, based on the current paragraph,
+"      whenever one or more of the comma-separated events occurs:
+augroup LangIdentify
+    " Conservative: the language identification is performed when
+    "    1) the user leaves the insert mode and 2) the buffer has changed
+    "autocmd FileType mail,tex,plaintex,latex SpellLangIdentify setlocal spell | :autocmd! LangIdentify InsertLeave <buffer> '{,'}SpellLangIdentifyLazy setlocal spell
+
+    " Medium: the language identification is performed when
+    "    1) the user leaves the insert mode or stops typing for awhile (normal
+    "    or insert mode); and 2) the buffer has changed
+    autocmd FileType mail,tex,plaintex,latex SpellLangIdentify setlocal spell | :autocmd! LangIdentify InsertLeave,CursorHold,CursorHoldI <buffer> '{,'}SpellLangIdentifyLazy setlocal spell
+
+    " Aggressive: the language identification is performed whenever
+    "    the user leaves the insert mode or stops typing for awhile (normal
+    "    or insert mode)
+    "autocmd FileType mail,tex,plaintex,latex SpellLangIdentify setlocal spell | :autocmd! LangIdentify InsertLeave,CursorHold,CursorHoldI <buffer> '{,'}SpellLangIdentify setlocal spell
+augroup END

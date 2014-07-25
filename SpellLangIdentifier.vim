@@ -52,8 +52,31 @@ if !exists('g:sliRaw')
    let g:sliRaw = ""
 endif
 
+" changenr() starts with 0. So, assigning 0 here means that when a buffer
+" is read (opened) HasChanged() -> false; assigning a value different
+" than zero (like -1) means that HasChanged() -> true when the buffer
+" is opened.
+let s:sliLastChangeID = 0
+
 " Save the cursor position, run the external script and restore the cursor position
 command! -range=% -nargs=* SpellLangIdentify let pos = getpos('.') | <line1>,<line2>call <SID>SpellLangIdentify(<q-args>) | call setpos('.',pos)
+
+" Only perform the language identification if the buffer has changed
+command! -range=% -nargs=* SpellLangIdentifyLazy if <SID>HasChanged() | let pos = getpos('.') | <line1>,<line2>call <SID>SpellLangIdentify(<q-args>) | call setpos('.',pos)
+
+" Check whether the buffer has been changed since the last time
+" It does not account for individual changes, but rather change sets (like undo)
+" A more active approach would be to use b:changedtick instead of changenr()
+function! <SID>HasChanged()
+   if s:LastChangeID != changenr()
+      let s:LastChangeID = changenr()
+   "if s:LastChangeID != b:changedtick
+   "   let s:LastChangeID = b:changedtick
+      return 1
+   else
+      return 0
+   endif
+endfunction
 
 " 'cmd' is the command string that is executed if a language is identified
 function! <SID>SpellLangIdentify( cmd ) range
