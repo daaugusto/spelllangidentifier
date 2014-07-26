@@ -10,8 +10,13 @@ Categorization".
 Installation
 ------------
 
+Decompress the tarball and change to directory `sli-x.y.z/`. From there,
+assuming you have a standard Vim setup:
+
 ```
+   mkdir -p ~/.vim/plugin
    cp -r SpellLangIdentifier.vim LanguageIdentifier.sh mguesser ~/.vim/plugin
+   cp vimrc.sample ~/.vimrc.sli
    cd ~/.vim/plugin/mguesser && make
 ```
 
@@ -19,9 +24,13 @@ Installation
 Configuration (~/.vimrc)
 ------------------------
 
-Please, check out the sample Vim configuration file `vimrc.sli`. You can
-introduce your changes there and *source* it directly from your personal
-*vimrc* by inserting the line `source /path/to/vimrc.sli`.
+Please, check out the sample Vim configuration file which you have just copied.
+If you prefer you can introduce your changes there and *source* it directly
+from your personal *vimrc* (usually `~/.vimrc`), by inserting the line `source
+~/.vimrc.sli`.
+
+Make sure you remove or comment out any previous spell checking configuration
+that might conflict with the new ones.
 
 
 Usage

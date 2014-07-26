@@ -58,18 +58,21 @@ autocmd InsertLeave *.txt '{,'}SpellLangIdentify setlocal spell
 "   2) Telling to (re)identify the language, based on the current paragraph,
 "      whenever one or more of the comma-separated events occurs:
 augroup LangIdentify
-    " Conservative: the language identification is automatically performed when
-    "    1) the user leaves the insert mode and 2) the buffer has changed
-    "autocmd FileType mail,tex,plaintex,latex SpellLangIdentify setlocal spell | :autocmd! LangIdentify InsertLeave <buffer> '{,'}SpellLangIdentifyLazy setlocal spell
+   " Conservative: the language identification is automatically performed when
+   "    1) the user leaves the insert mode and 2) the buffer has changed
+   "autocmd FileType mail,tex,plaintex,latex SpellLangIdentify setlocal spell | :autocmd! LangIdentify InsertLeave <buffer> '{,'}SpellLangIdentifyLazy setlocal spell
 
-    " Medium: the language identification is automatically performed when
-    "    1) the user leaves the insert mode or stops typing for awhile (normal
-    "    or insert mode); and 2) the buffer has changed
-    autocmd FileType mail,tex,plaintex,latex SpellLangIdentify setlocal spell | :autocmd! LangIdentify InsertLeave,CursorHold,CursorHoldI <buffer> '{,'}SpellLangIdentifyLazy setlocal spell
+   " Medium: the language identification is automatically performed when
+   "    1) the user leaves the insert mode or stops typing for awhile (normal
+   "    or insert mode); and 2) the buffer has changed
+   autocmd FileType mail,tex,plaintex,latex SpellLangIdentify setlocal spell | :autocmd! LangIdentify InsertLeave,CursorHold,CursorHoldI <buffer> '{,'}SpellLangIdentifyLazy setlocal spell | setlocal updatetime=400
 
-    " Aggressive: the language identification is automatically performed when
-    "    the user leaves the insert mode or stops typing for awhile (normal
-    "    or insert mode)
-    " (You should give it a try!)
-    "autocmd FileType mail,tex,plaintex,latex :autocmd! LangIdentify InsertLeave,CursorHold,CursorHoldI <buffer> '{,'}SpellLangIdentify setlocal spell
+   " Aggressive: the language identification is automatically performed when
+   "    the user leaves the insert mode or stops typing for awhile (normal
+   "    or insert mode)
+   " (You should give it a try!)
+   "autocmd FileType mail,tex,plaintex,latex :autocmd! LangIdentify InsertLeave,CursorHold,CursorHoldI <buffer> '{,'}SpellLangIdentify setlocal spell | setlocal updatetime=200
+
+   " PS: the Vim's variable 'updatetime' controls how many milliseconds without
+   " user interaction the plugin must wait before performing a language detection.
 augroup END
