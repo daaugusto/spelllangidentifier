@@ -7,7 +7,7 @@ all: mguesser
 
 
 mguesser: guesser.o crc32.o utils.o Makefile
-	$(CC) $(CFLAGS) $(LIBS) guesser.o crc32.o utils.o -o mguesser
+	$(CC) $(CFLAGS) guesser.o crc32.o utils.o -o mguesser $(LIBS)
 
 
 guesser.o: guesser.c
