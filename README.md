@@ -37,7 +37,7 @@ Usage
 -----
 
    1. Automatically (just open a text, mail or TeX file, as illustrated in `vimrc.sli`). It even works on-the-fly while you edit the file, switching the languages on a paragraph basis when working on multi-language documents (configurable).
-   2. Using shortcuts in normal or insert mode (`F6`, `F7`, and `F8`; `F9` to disable spell checking).
+   2. Using shortcuts in normal or insert mode (`F5`, `F6`, `F7` and `F8`; `F9` to disable spell checking and on-the-fly language identification).
    3. Directly: `:{range}SpellLangIdentify` (identify the language based on `{range}` lines; default is the whole buffer).
 
 
@@ -55,3 +55,7 @@ Prerequisites
 -------------
 
    * Unix-like environment (POSIX shell, coreutils, awk, sed, grep, file, ...).
+
+   * In order to improve language detection according to the file type at hand, it
+is recommended (but not required) to have the following utilities installed:
+detex, ps2ascii, html2text.

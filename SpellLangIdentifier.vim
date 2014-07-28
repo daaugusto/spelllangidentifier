@@ -9,8 +9,6 @@
 "
 "       Author: Douglas A. Augusto (daaugusto@gmail.com)
 "
-"      Version: 0.3.0
-"
 "      License: GNU GPL version 3 or later <www.gnu.org/licenses/gpl.html>
 "
 "          URL: http://www.vim.org/scripts/script.php?script_id=4988
@@ -84,8 +82,10 @@ function! <SID>SpellLangIdentify( cmd ) range
    let lines = getline(a:firstline,a:lastline)
    " Convert a list of lines to a string of lines
    let input = join(lines, "\n") . "\n"
+   " Assemble the augmented filename: constant SLI + its type + its current filename
+   let filename = shellescape("SLI." . &filetype . "." . expand('%:t'))
    " Run the command and execute its output
-   let lang = system(s:sliScriptPath . " " . g:sliPath . " " . g:sliMaps . " " . g:sliLangs . " " . g:sliNLangs . " " . g:sliSubs . " " . g:sliRaw . " " . shellescape(expand('%:t')), input)
+   let lang = system(s:sliScriptPath . " " . g:sliPath . " " . g:sliMaps . " " . g:sliLangs . " " . g:sliNLangs . " " . g:sliSubs . " " . g:sliRaw . " " . filename, input)
 
    if !empty(lang) " If input length is 0 then the identification has failed because there is not enough information (soft error).
       if lang != "ERROR"

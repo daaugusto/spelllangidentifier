@@ -11,16 +11,16 @@
 "        when it was enabled manually (via F8 shortcut)
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " Normal mode
-map <F5> :.SpellLangIdentify setlocal spell<CR>
-map <F6> :'{,'}SpellLangIdentify setlocal spell<CR>
-map <F7> :%SpellLangIdentify setlocal spell<CR>
+map <F5> :.SpellLangIdentify setlocal spell<CR>:setl spl<CR>
+map <F6> :'{,'}SpellLangIdentify setlocal spell<CR>:setl spl<CR>
+map <F7> :%SpellLangIdentify setlocal spell<CR>:setl spl<CR>
 map <silent> <F8> :echo "Auto language identification ON"  <Bar> :augroup SLI <Bar> :au! InsertLeave,CursorHold,CursorHoldI <buffer> '{,'}SpellLangIdentifyLazy setl spell <Bar> :augroup END<CR>
 map <silent> <F9> :echo "Auto language identification OFF" <Bar> :setl nospell <Bar> :silent! :au! SLI<CR>
 
 " Insert mode
-imap <F5> <C-\><C-O>:.SpellLangIdentify setlocal spell<CR>
-imap <F6> <C-\><C-O>:'{,'}SpellLangIdentify setlocal spell<CR>
-imap <F7> <C-\><C-O>:%SpellLangIdentify setlocal spell<CR>
+imap <F5> <C-\><C-O>:.SpellLangIdentify setlocal spell<CR><C-\><C-O>:setl spl<CR>
+imap <F6> <C-\><C-O>:'{,'}SpellLangIdentify setlocal spell<CR><C-\><C-O>:setl spl<CR>
+imap <F7> <C-\><C-O>:%SpellLangIdentify setlocal spell<CR><C-\><C-O>:setl spl<CR>
 imap <silent> <F8> <C-\><C-O>:echo "Auto language identification ON"  <Bar> :augroup SLI <Bar> :au! InsertLeave,CursorHold,CursorHoldI <buffer> '{,'}SpellLangIdentifyLazy setl spell <Bar> :augroup END<CR>
 imap <silent> <F9> <C-\><C-O>:echo "Auto language identification OFF" <Bar> :setl nospell <Bar> :silent! :au! SLI<CR>
 
