@@ -25,7 +25,7 @@ usage()
    echo
    echo "Usage: ... | $SCRIPT_NAME [-path <mguesser path>] [-maps <lang maps dir>]"
    echo "             [-langs <lang1|...|langN>] [-nlangs <n>]"
-   echo "             [-subs <sed's patterns>] [-raw] [filename]"
+   echo "             [-subs <sed's patterns>] [-type <file type>] [filename]"
    echo
    echo "where:"
    echo
@@ -39,8 +39,9 @@ usage()
    echo "     allows up to 'n' languages to be identified (multiple spell langs)"
    echo "  -subs <sed's patterns>"
    echo "     translates mguesser language codes to others"
-   echo "  -raw"
-   echo "     does not try to convert input to plain text (letters only)"
+   echo "  -type <file type>"
+   echo "     explicitly specifies the file type; if 'raw' it does not try to convert"
+   echo "     the input to plain text (letters only)"
    echo "  filename"
    echo "     filename (w/ extension) to help to determine the input file type"
    echo
@@ -81,8 +82,8 @@ NLANGS=1
 #    sw ta th tl tr ua vi zh
 SUBS=":"   # sed ':' does nothing (same as cat)
 
-# Whether to pass the contents to mguesses as is
-RAW=""
+# Explicitly specify the file type
+FT=""
 
 FILE=""
 
@@ -93,7 +94,7 @@ while [ $# -ge 1 ]; do
       -langs)    shift; LANGS="$1" ;;
       -nlangs)   shift; NLANGS="$1" ;;
       -subs)     shift; SUBS="$1" ;;
-      -raw)      RAW="1" ;;
+      -type)     shift; FT="$1" ;;
       -h|--help) usage ;;
       *)         FILE="$(printf "%s" "$1" | tr -d -c '[:alpha:].')" ;; # sanatize the given filename
    esac
@@ -106,25 +107,23 @@ done
 
 
 TMP="`mktemp -d`"
-[ -z "$FILE" ] && FILE="unnamed"
-FILE="$TMP/$FILE"
+FILE="$TMP/sli-$FILE"
 
 FILTER="cat "$FILE""   # does nothing
 
 # Save the input to the temporary file
 cat - > "$FILE"
 
-# Find out the type of the file if the option '-raw' has not been specified
-FT=""
-[ "$RAW" ] || FT="`file --mime-type -b "$FILE"`"
+# Find out the type of the file if no type has been given (-type)
+[ "$FT" ] || FT="`file --mime-type -b "$FILE"`"
 
 # Transform (try to) non-plain text files to plain text:
 case $FT in
-   "text/x-tex")
+   "text/x-tex"|"tex"|"latex"|"plaintex")
       if type detex > /dev/null 2>&1; then FILTER="detex "$FILE""; fi ;;
    "application/postscript")
       if type ps2ascii > /dev/null 2>&1; then FILTER="ps2ascii "$FILE""; fi ;;
-   "text/html")
+   "text/html"|"html")
       if type html2text > /dev/null 2>&1; then FILTER="html2text "$FILE""; fi ;;
    "message/rfc822")
       FILTER="sed '1,/^$/d' "$FILE""
@@ -132,7 +131,7 @@ case $FT in
 esac
 
 # Guess the language:
-#  1) the filter that converts the raw input to plain text is applied (if -raw isn't specified)
+#  1) the filter that converts the raw input to plain text is applied (if '-type raw' isn't specified)
 #  2) all punctuation chars are transformed into single spaces, which are then squeezed and
 #     all characters that are not letters or spaces are deleted.
 #  3) the resulting content are then given to 'mguesser'
@@ -155,7 +154,7 @@ else
    printf "ERROR"
 
    # Debugging (uncomment for debugging)
-   #echo "$CMD [-path $MG | -maps $MGMAPS | -langs $LANGS | -nlangs $NLANGS | -subs $SUBS | -raw $RAW]"
+   #echo "$CMD [-path $MG | -maps $MGMAPS | -langs $LANGS | -nlangs $NLANGS | -subs $SUBS | -type $FT]"
    #printf "%s\n" "$OUT"
 fi
 

@@ -46,9 +46,9 @@ endif
 if !exists('g:sliSubs')
    let g:sliSubs = ""
 endif
-if !exists('g:sliRaw')
-   let g:sliRaw = ""
-endif
+"if !exists('g:sliFiletype')
+"   let g:sliFiletype = ""
+"endif
 
 " ID/count of the last buffer change
 " b:changedtick seems to start with 3 when creating/reading a named file So,
@@ -82,10 +82,16 @@ function! <SID>SpellLangIdentify( cmd ) range
    let lines = getline(a:firstline,a:lastline)
    " Convert a list of lines to a string of lines
    let input = join(lines, "\n") . "\n"
-   " Assemble the augmented filename: constant SLI + its type + its current filename
-   let filename = shellescape("SLI." . &filetype . "." . expand('%:t'))
+
+   " Decide how to pass the file type to the script (LanguageIdentifier.sh)
+   if exists('g:sliFiletype')
+      let type = g:sliFiletype
+   else
+      let type = &filetype
+   endif
+
    " Run the command and execute its output
-   let lang = system(s:sliScriptPath . " " . g:sliPath . " " . g:sliMaps . " " . g:sliLangs . " " . g:sliNLangs . " " . g:sliSubs . " " . g:sliRaw . " " . filename, input)
+   let lang = system(s:sliScriptPath . " " . g:sliPath . " " . g:sliMaps . " " . g:sliLangs . " " . g:sliNLangs . " " . g:sliSubs . " " . "-type " . string(type) . " " . shellescape(expand('%:t')), input)
 
    if !empty(lang) " If input length is 0 then the identification has failed because there is not enough information (soft error).
       if lang != "ERROR"

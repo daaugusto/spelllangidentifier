@@ -43,8 +43,12 @@ let g:sliLangs = "-langs 'en|pt'"
 " Only one language will be guessed at a time
 let g:sliNLangs = "-nlangs 1"
 
-" If enabled it does not try to convert to plain text
-"leg g:sliRaw = "-raw"
+" If defined, it explicitly specifies the file type to be passed to the script.
+" 'g:sliFiletype = ""' forces the script to use the utility 'file' to guess
+" the file type, while 'g:sliFiletype = "raw"' prevents the script to convert
+" the input to plain text.
+" (If you don't know what you're doing, leave this option commented)
+"let g:sliFiletype = ""
 
 " Default mguesser's language code list (the user can create their own mapping):
 "    af ar az be bg br bs ca cs cy da de el en eo eo-h eo-x es et eu fi fr ga
