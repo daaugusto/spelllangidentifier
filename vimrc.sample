@@ -1,17 +1,28 @@
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " Recommended mappings:
-"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-" normal mode
-map <F6> :.SpellLangIdentify setlocal spell<CR>:set spl<CR> " current line based
-map <F7> :'{,'}SpellLangIdentify setlocal spell<CR>:set spl<CR> " current paragraph based
-map <F8> :%SpellLangIdentify setlocal spell<CR>:set spl<CR> " whole buffer based
-map <F9> :setlocal nospell<CR> " turn off spell checking
 
-" insert mode
-imap <F6> <C-\><C-O>:.SpellLangIdentify setlocal spell<CR><C-\><C-O>:set spl<CR>
-imap <F7> <C-\><C-O>:'{,'}SpellLangIdentify setlocal spell<CR><C-\><C-O>:set spl<CR>
-imap <F8> <C-\><C-O>:%SpellLangIdentify setlocal spell<CR><C-\><C-O>:set spl<CR>
-imap <F9> <C-\><C-O>:setlocal nospell<CR>
+"   F5: Tries to automatically set buffer language based on the current line
+"   F6: Tries to automatically set buffer language based on the current paragraph
+"   F7: Tries to automatically set buffer language based on the whole buffer
+"   F8: Enables automatic language identification, which is performed whenever
+"        the user change the buffer (remove the suffix 'Lazy' to call the
+"        language identification even if the user didn't change the buffer)
+"   F9: Disables buffer spell checking, including auto language identification
+"        when it was enabled manually (via F8 shortcut)
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" Normal mode
+map <F5> :.SpellLangIdentify setlocal spell<CR>
+map <F6> :'{,'}SpellLangIdentify setlocal spell<CR>
+map <F7> :%SpellLangIdentify setlocal spell<CR>
+map <silent> <F8> :echo "Auto language identification ON"  <Bar> :augroup SLI <Bar> :au! InsertLeave,CursorHold,CursorHoldI <buffer> '{,'}SpellLangIdentifyLazy setl spell <Bar> :augroup END<CR>
+map <silent> <F9> :echo "Auto language identification OFF" <Bar> :setl nospell <Bar> :silent! :au! SLI<CR>
+
+" Insert mode
+imap <F5> <C-\><C-O>:.SpellLangIdentify setlocal spell<CR>
+imap <F6> <C-\><C-O>:'{,'}SpellLangIdentify setlocal spell<CR>
+imap <F7> <C-\><C-O>:%SpellLangIdentify setlocal spell<CR>
+imap <silent> <F8> <C-\><C-O>:echo "Auto language identification ON"  <Bar> :augroup SLI <Bar> :au! InsertLeave,CursorHold,CursorHoldI <buffer> '{,'}SpellLangIdentifyLazy setl spell <Bar> :augroup END<CR>
+imap <silent> <F9> <C-\><C-O>:echo "Auto language identification OFF" <Bar> :setl nospell <Bar> :silent! :au! SLI<CR>
 
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " Settings example:
@@ -40,39 +51,41 @@ let g:sliNLangs = "-nlangs 1"
 "    he hi hr hu hy is it ja la lt lv nl no pl pt-br pt-pt ro ru sk sl sq sr sv
 "    sw ta th tl tr ua vi zh
 
+" The Vim's variable 'updatetime' controls how many milliseconds without
+" user interaction the plugin must wait before performing a language detection.
+" The default is 4000ms (4 seconds), but we suggest a more frequent updating:
+set updatetime=400
+
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " Autocmd examples (language identification & spelling based on file types):
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " Detects document's language and sets spell checking when reading a .txt file:
 " ('setlocal spell' is the command that is executed when a language is detected)
-autocmd BufRead *.txt SpellLangIdentify setlocal spell
+"autocmd BufRead *.txt SpellLangIdentify setlocal spell
 
 " Identifies current paragraph's language and sets the spell checking whenever
 " leaving insert mode:
-autocmd InsertLeave *.txt '{,'}SpellLangIdentify setlocal spell
+"autocmd InsertLeave *.txt '{,'}SpellLangIdentify setlocal spell
 
 " Another way of configuring SpellLangIdentifier based on the file type:
-" As illustrated by the example below, when the filetype is 'mail' or 'tex'
-" (and its variants) two things happen:
+" As illustrated by the example below, when the filetype is 'mail', 'text'
+" or 'tex' (and its variants) two things happen:
 "   1) Identification of the buffer's language, turning on spell checking; and
 "   2) Telling to (re)identify the language, based on the current paragraph,
 "      whenever one or more of the comma-separated events occurs:
 augroup LangIdentify
    " Conservative: the language identification is automatically performed when
    "    1) the user leaves the insert mode and 2) the buffer has changed
-   "autocmd FileType mail,tex,plaintex,latex SpellLangIdentify setlocal spell | :autocmd! LangIdentify InsertLeave <buffer> '{,'}SpellLangIdentifyLazy setlocal spell
+   "autocmd FileType mail,text,tex,plaintex,latex SpellLangIdentify setlocal spell | :autocmd! LangIdentify InsertLeave <buffer> '{,'}SpellLangIdentifyLazy setlocal spell
 
    " Medium: the language identification is automatically performed when
    "    1) the user leaves the insert mode or stops typing for awhile (normal
    "    or insert mode); and 2) the buffer has changed
-   autocmd FileType mail,tex,plaintex,latex SpellLangIdentify setlocal spell | :autocmd! LangIdentify InsertLeave,CursorHold,CursorHoldI <buffer> '{,'}SpellLangIdentifyLazy setlocal spell | setlocal updatetime=400
+   autocmd FileType mail,text,tex,plaintex,latex SpellLangIdentify setlocal spell | :autocmd! LangIdentify InsertLeave,CursorHold,CursorHoldI <buffer> '{,'}SpellLangIdentifyLazy setlocal spell | setlocal updatetime=400
 
    " Aggressive: the language identification is automatically performed when
    "    the user leaves the insert mode or stops typing for awhile (normal
    "    or insert mode)
    " (You should give it a try!)
-   "autocmd FileType mail,tex,plaintex,latex :autocmd! LangIdentify InsertLeave,CursorHold,CursorHoldI <buffer> '{,'}SpellLangIdentify setlocal spell | setlocal updatetime=200
-
-   " PS: the Vim's variable 'updatetime' controls how many milliseconds without
-   " user interaction the plugin must wait before performing a language detection.
+   "autocmd FileType mail,text,tex,plaintex,latex :autocmd! LangIdentify InsertLeave,CursorHold,CursorHoldI <buffer> '{,'}SpellLangIdentify setlocal spell | setlocal updatetime=200
 augroup END
