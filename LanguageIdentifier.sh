@@ -126,8 +126,10 @@ case $FT in
    "text/html"|"html")
       if type html2text > /dev/null 2>&1; then FILTER="html2text "$FILE""; fi ;;
    "message/rfc822")
-      FILTER="sed '1,/^$/d' "$FILE""
+      FILTER="sed '1,/^\$/d' "$FILE""
       if type html2text > /dev/null 2>&1; then FILTER="$FILTER | html2text"; fi ;;
+   "gitcommit")
+      FILTER="sed '/^#/,\$d' "$FILE"" ;; # leave only the commit message
 esac
 
 # Guess the language:
