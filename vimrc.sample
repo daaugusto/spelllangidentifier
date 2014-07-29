@@ -92,4 +92,11 @@ augroup LangIdentify
    "    or insert mode)
    " (You should give it a try!)
    "autocmd FileType mail,text,tex,plaintex,latex,gitcommit :autocmd! LangIdentify InsertLeave,CursorHold,CursorHoldI <buffer> '{,'}SpellLangIdentify setlocal spell | setlocal updatetime=200
+
+
+   " Notes: To disable the auto language identification for the current buffer
+   "        at editing time:
+   "           :au! LangIdentify * <buffer>
+   "        To disable for all file types above during the current Vim session:
+   "           :au! LangIdentify
 augroup END
