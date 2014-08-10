@@ -125,8 +125,12 @@ case $FT in
       if type ps2ascii > /dev/null 2>&1; then FILTER="ps2ascii "$FILE""; fi ;;
    "text/html"|"html")
       if type html2text > /dev/null 2>&1; then FILTER="html2text "$FILE""; fi ;;
-   "message/rfc822")
-      FILTER="sed '1,/^\$/d' "$FILE""
+   "message/rfc822"|"mail")
+      # The first expression removes common rfc822 fields (but not Subject) that
+      #    appear in the first paragraph
+      # The second strips the prefix 'Subject: ', leaving only the actual subject
+      # The third removes everything from the signature mark (-- ) on
+      FILTER="sed -E -e '''0,/^$/{/^(From|To|.*Reply-To|Cc|Bcc|X-.*): / d}''' -e '''0,/^Subject: /s/^Subject: //''' -e '''/^-- ?$/,$ d''' "$FILE""
       if type html2text > /dev/null 2>&1; then FILTER="$FILTER | html2text"; fi ;;
    "gitcommit")
       FILTER="sed '/^#/,\$d' "$FILE"" ;; # leave only the commit message
