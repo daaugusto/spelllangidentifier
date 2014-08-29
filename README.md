@@ -59,3 +59,9 @@ Prerequisites
    * In order to improve language detection according to the file type at hand, it
 is recommended (but not required) to have the following utilities installed:
 detex, ps2ascii, html2text.
+
+
+Known issues
+------------
+
+Your mileage may vary, but it seems that the on-the-fly language detection does not work well in console-based Vim. Thus, if you experience glitches (such as messy screen) I recommend you to turn off the auto command (as defined in the `vimrc.sli` sample file) for the following events: InsertLeave, CursorHold and CursorHoldI. The issue is currently being investigated.
