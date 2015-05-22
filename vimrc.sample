@@ -83,12 +83,12 @@ augroup LangIdentify
    "autocmd FileType mail,text,tex,plaintex,latex,gitcommit SpellLangIdentify setlocal spell | :autocmd! LangIdentify InsertLeave <buffer> '{,'}SpellLangIdentifyLazy setlocal spell
 
    " Medium: the language identification is automatically performed when
-   "    1) the user leaves the insert mode or stops typing for awhile (normal
+   "    1) the user leaves the insert mode or stops typing for a while (normal
    "    or insert mode); and 2) the buffer has changed
    autocmd FileType mail,text,tex,plaintex,latex,gitcommit SpellLangIdentify setlocal spell | :autocmd! LangIdentify InsertLeave,CursorHold,CursorHoldI <buffer> '{,'}SpellLangIdentifyLazy setlocal spell | setlocal updatetime=400
 
    " Aggressive: the language identification is automatically performed when
-   "    the user leaves the insert mode or stops typing for awhile (normal
+   "    the user leaves the insert mode or stops typing for a while (normal
    "    or insert mode)
    " (You should give it a try!)
    "autocmd FileType mail,text,tex,plaintex,latex,gitcommit :autocmd! LangIdentify InsertLeave,CursorHold,CursorHoldI <buffer> '{,'}SpellLangIdentify setlocal spell | setlocal updatetime=200
