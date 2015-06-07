@@ -61,7 +61,7 @@ let g:sliNLangs = "-nlangs 1"
 set updatetime=400
 
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-" Autocmd examples (language identification & spelling based on file types):
+" Autocmd examples (language identification & spelling based on file types)
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " Detects document's language and sets spell checking when reading a .txt file:
 " ('setlocal spell' is the command that is executed when a language is detected)
@@ -71,9 +71,14 @@ set updatetime=400
 " leaving insert mode:
 "autocmd InsertLeave *.txt '{,'}SpellLangIdentify setlocal spell
 
-" Another way of configuring SpellLangIdentifier based on the file type:
-" As illustrated by the example below, when the filetype is 'mail', 'text',
-" gitcommit or 'tex' (and its variants) two things happen:
+""""""""
+" Another way of configuring SpellLangIdentifier based on the file type
+""""""""
+" First we need to enable Vim's file type detection:
+:filetype on
+
+" As illustrated by the examples below (choose one of them), when the filetype
+" is 'mail', 'text', 'gitcommit' or 'tex' (and its variants) two things happen:
 "   1) Identification of the buffer's language, turning on spell checking; and
 "   2) Telling to (re)identify the language, based on the current paragraph,
 "      whenever one or more of the comma-separated events occurs:
