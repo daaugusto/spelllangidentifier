@@ -91,7 +91,7 @@ function! <SID>SpellLangIdentify( cmd ) range
    endif
 
    " Run the command and execute its output
-   let lang = system(s:sliScriptPath . " " . g:sliPath . " " . g:sliMaps . " " . g:sliLangs . " " . g:sliNLangs . " " . g:sliSubs . " " . "-type " . string(type) . " " . shellescape(expand('%:t')), input)
+   silent let lang = system(s:sliScriptPath . " " . g:sliPath . " " . g:sliMaps . " " . g:sliLangs . " " . g:sliNLangs . " " . g:sliSubs . " " . "-type " . string(type) . " " . shellescape(expand('%:t')), input)
 
    if v:shell_error
       echoe "[SpellLangIdentifier] An error has occurred while trying to run script '" . s:sliScriptPath . "'!"
