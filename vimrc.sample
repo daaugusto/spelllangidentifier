@@ -6,9 +6,10 @@
 "   F7: Tries to automatically set buffer language based on the whole buffer
 "   F8: Enables automatic language identification, which is performed whenever
 "        the user change the buffer (remove the suffix 'Lazy' to call the
-"        language identification even if the user didn't change the buffer)
+"        language identification even if the user didn't change the buffer; i.e,
+"        make it more "aggressive")
 "   F9: Disables buffer spell checking, including auto language identification
-"        when it was enabled manually (via F8 shortcut)
+"        *when it was enabled manually* (via F8 shortcut)
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " Normal mode
 map <F5> :.SpellLangIdentify setlocal spell<CR>:setl spl<CR>
@@ -78,25 +79,25 @@ set updatetime=400
 :filetype on
 
 " As illustrated by the examples below (choose one of them), when the filetype
-" is 'mail', 'text', 'gitcommit' or 'tex' (and its variants) two things happen:
+" is 'mail', 'gitcommit' or 'tex' (and its variants) two things happen:
 "   1) Identification of the buffer's language, turning on spell checking; and
 "   2) Telling to (re)identify the language, based on the current paragraph,
 "      whenever one or more of the comma-separated events occurs:
 augroup LangIdentify
    " Conservative: the language identification is automatically performed when
    "    1) the user leaves the insert mode and 2) the buffer has changed
-   "autocmd FileType mail,text,tex,plaintex,latex,gitcommit SpellLangIdentify setlocal spell | :autocmd! LangIdentify InsertLeave <buffer> '{,'}SpellLangIdentifyLazy setlocal spell
+   "autocmd FileType mail,tex,plaintex,latex,gitcommit SpellLangIdentify setlocal spell | :autocmd! LangIdentify InsertLeave <buffer> '{,'}SpellLangIdentifyLazy setlocal spell
 
    " Medium: the language identification is automatically performed when
    "    1) the user leaves the insert mode or stops typing for a while (normal
    "    or insert mode); and 2) the buffer has changed
-   autocmd FileType mail,text,tex,plaintex,latex,gitcommit SpellLangIdentify setlocal spell | :autocmd! LangIdentify InsertLeave,CursorHold,CursorHoldI <buffer> '{,'}SpellLangIdentifyLazy setlocal spell | setlocal updatetime=400
+   autocmd FileType mail,tex,plaintex,latex,gitcommit SpellLangIdentify setlocal spell | :autocmd! LangIdentify InsertLeave,CursorHold,CursorHoldI <buffer> '{,'}SpellLangIdentifyLazy setlocal spell | setlocal updatetime=400
 
    " Aggressive: the language identification is automatically performed when
    "    the user leaves the insert mode or stops typing for a while (normal
    "    or insert mode)
    " (You should give it a try!)
-   "autocmd FileType mail,text,tex,plaintex,latex,gitcommit :autocmd! LangIdentify InsertLeave,CursorHold,CursorHoldI <buffer> '{,'}SpellLangIdentify setlocal spell | setlocal updatetime=200
+   "autocmd FileType mail,tex,plaintex,latex,gitcommit :autocmd! LangIdentify InsertLeave,CursorHold,CursorHoldI <buffer> '{,'}SpellLangIdentify setlocal spell | setlocal updatetime=200
 
 
    " Notes: To disable the auto language identification for the current buffer
