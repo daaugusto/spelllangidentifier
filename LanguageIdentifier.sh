@@ -96,7 +96,7 @@ while [ $# -ge 1 ]; do
       -subs)     shift; SUBS="$1" ;;
       -type)     shift; FT="$1" ;;
       -h|--help) usage ;;
-      *)         FILE="$(printf "%s" "$1" | tr -d -c '[:alpha:].')" ;; # sanatize the given filename
+      *)         FILE="$(printf "%s" "$1" | tr -d -c '[:alpha:].')" ;; # sanitize the given filename
    esac
    shift
 done
