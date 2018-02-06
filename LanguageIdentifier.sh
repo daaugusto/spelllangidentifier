@@ -80,7 +80,7 @@ NLANGS=1
 #    af ar az be bg br bs ca cs cy da de el en eo eo-h eo-x es et eu fi fr ga
 #    he hi hr hu hy is it ja la lt lv nl no pl pt-br pt-pt ro ru sk sl sq sr sv
 #    sw ta th tl tr ua vi zh
-SUBS=":"   # sed ':' does nothing (same as cat)
+SUBS=""
 
 # Explicitly specify the file type
 FT=""
@@ -152,7 +152,7 @@ then
    # guessings | perform the substitutions (if any)| remove possible duplicate
    # languages | filter out undesired languages (matches whole line) | replace
    # EOL with comma
-   LANG="$(printf "%s\n" "$OUT" | awk '$1 !~ /^0.000/ {print $2}' | sed -E "$SUBS" | awk '!a[$0]++' | grep -E -x -m $NLANGS "$LANGS" | paste -sd',')"
+   LANG="$(printf "%s\n" "$OUT" | awk '$1 !~ /^0.000/ {print $2}' | sed -E "$SUBS" | awk '!a[$0]++' | grep -E -x -m $NLANGS "$LANGS" | paste -sd',' -)"
 
    # Output guessed language (empty if it could not identify)
    printf "%s" "$LANG"
